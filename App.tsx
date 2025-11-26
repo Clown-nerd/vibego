@@ -260,7 +260,7 @@ const App: React.FC = () => {
                <div className="mt-auto animate-fade-in-up delay-200">
                  <div className="flex items-center justify-between mb-4 px-2">
                    <h2 className="text-2xl font-bold text-white tracking-tight">Trending Now</h2>
-                   <span className="text-xs font-medium text-slate-400">6 experiences waiting for you</span>
+                   <span className="text-xs font-medium text-slate-400">Experiences awaiting you</span>
                  </div>
                  
                  {/* 

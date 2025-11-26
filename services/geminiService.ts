@@ -21,44 +21,65 @@ export const getVibeRecommendations = async (
   const today = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
 
   const prompt = `
-    Context: Today is ${today}.
-    I am a ${prefs.groupType} group feeling ${prefs.mood}.
-    My budget is around ${prefs.budget} (local currency).
-    We are interested in: ${prefs.activities.join(', ')}.
-    
-    TIMEFRAME: Look for things happening **${dateRange}**.
-    CATEGORY FOCUS: ${category === 'All' ? 'Mix of best options based on mood' : `Strictly focus on ${category}`}.
-    
-    Current Location Lat/Lng: ${location.latitude}, ${location.longitude}.
+Context:
+- Today's date: ${today}
+- Group type: ${prefs.groupType}
+- Current mood: ${prefs.mood}
+- Budget: ${prefs.budget} (local currency)
+- Interested in: ${prefs.activities.join(', ')}
+- Location: ${location.latitude}, ${location.longitude}
 
-    Task: Find 5 specific, real recommendations nearby matching the Timeframe and Category.
-    
-    CRITICAL SOURCE INSTRUCTION:
-    You MUST search for upcoming events, gigs, and parties specifically on these websites:
-    1. KenyaBuzz.com
-    2. Ticketsasa.com
-    3. TicketYetu.com
-    
-    If you find an event on these sites, extract the Price and the Domain Name (e.g., ticketsasa.com) for the tickets. 
-    DO NOT GUESS THE FULL URL if you don't find a direct link in the search results, just provide the domain.
+SEARCH PARAMETERS:
+- Timeframe: ${dateRange}
+- Category: ${category === 'All' ? 'Curate a diverse mix matching our mood and interests' : category}
 
-    If no events are found on these specific sites for ${dateRange}, fallback to suggesting the best general venues (clubs, restaurants, parks) matching the mood.
+PRIMARY TASK:
+Find 5 specific, real recommendations that match our criteria.
 
-    OUTPUT FORMAT:
-    Please present the results as a list. For each item, strictly follow this format:
-    
-    ### [Name of Place or Event]
-    **Type**: [Type e.g. Concert, Festival, Nightclub, Dinner]
-    **Budget**: [Specific Price if available, e.g. "KES 1500", or Estimate $$-$$$]
-    **Time**: [Specific Date & Time for events, or Opening Hours]
-    **Rating**: [Google Rating if available, e.g. 4.5/5]
-    **Vibe**: [Short description of why it fits]
-    **Address**: [Approximate address or area]
-    **Coordinates**: [Latitude, Longitude] (e.g. -1.2921, 36.8219)
-    **TicketLink**: [Direct URL if definitely known, or just the domain "ticketsasa.com" / "kenyabuzz.com" / "None"]
-    
-    Then provide a short summary at the end.
-  `;
+SEARCH STRATEGY:
+1. First, search these event platforms for happenings during ${dateRange}:
+   - KenyaBuzz.com
+   - Ticketsasa.com
+   - TicketYetu.com
+   - Eventbrite.com
+   - Gig.co.ke
+   - nairobieventsguide.com
+   - eventpass.ke
+
+2. For events found on these platforms:
+   - Extract the actual ticket price if listed
+   - Note the source domain (e.g., "ticketsasa.com")
+   - Only include direct URLs if you find them in search results—never construct or guess URLs
+
+3. If no relevant events are found on these platforms, recommend:
+   - Established venues (clubs, restaurants, lounges, parks)
+   - Places with verified ratings and reviews
+   - Options that match our mood: ${prefs.mood}
+
+OUTPUT FORMAT:
+Present each recommendation using this exact structure:
+
+### [Name]
+**Type**: [e.g., Live Concert, Rooftop Party, Restaurant, Park]
+**Budget**: [Exact price if known (e.g., "KES 1,500") OR estimated range (e.g., "KES 2,000-3,500")]
+**Time**: [For events: specific date & time | For venues: operating hours]
+**Rating**: [Google rating if available, e.g., "4.5/5" OR "N/A"]
+**Vibe**: [1-2 sentences explaining why this fits our ${prefs.mood} mood and interests]
+**Address**: [Specific address or neighborhood]
+**Coordinates**: [Latitude, Longitude]
+**Tickets**: [Direct URL if found in search results | Domain only (e.g., "ticketsasa.com") | "Walk-in" for venues | "N/A"]
+
+FINAL SUMMARY:
+After all recommendations, provide a 2-3 sentence overview highlighting the best option for our ${prefs.mood} mood and any notable patterns in the suggestions.
+
+IMPORTANT RULES:
+- Be specific—use real venue names, actual events, and verified information
+- Never invent URLs, prices, or details you haven't found
+- Prioritize options within the ${prefs.budget} budget
+- Ensure coordinates are accurate for navigation
+- Match the ${prefs.mood} mood throughout your recommendations
+- Don't show past events, show upcoming or happening now events
+`;
 
   try {
     const response = await ai.models.generateContent({

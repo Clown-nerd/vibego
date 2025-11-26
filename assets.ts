@@ -18,5 +18,5 @@ export const CATEGORY_IMAGES: Record<string, string> = {
   'Live Music': 'https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?q=80&w=1740&auto=format&fit=crop', // Concert
   'Art': 'https://images.unsplash.com/photo-1579783902614-a3fb39279c0f?q=80&w=1740&auto=format&fit=crop', // Museum/Art
   'Nature': 'https://images.unsplash.com/photo-1469474932222-de0d97449d84?q=80&w=1740&auto=format&fit=crop', // Outdoors
-  'Fitness': 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?q=80&w=1740&auto=format&fit=crop', // Gym
+  'Outdoors': 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?q=80&w=1740&auto=format&fit=crop', // Gym
 };

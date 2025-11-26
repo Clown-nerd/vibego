@@ -101,6 +101,9 @@ const VenueCard: React.FC<VenueCardProps> = ({ venue, userLocation }) => {
     if (link.includes('ticketsasa')) return 'Ticketsasa';
     if (link.includes('kenyabuzz')) return 'KenyaBuzz';
     if (link.includes('ticketyetu')) return 'TicketYetu';
+    if (link.includes('gig.co.ke')) return 'Gig.co.ke';
+    if (link.includes('nairobieventsguide.com')) return 'Nairobi Event Guide';
+    if (link.includes('eventpass.ke')) return 'EventPass';
     return 'Get Tickets';
   };
 

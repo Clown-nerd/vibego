@@ -99,16 +99,16 @@ const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
         <label className="text-slate-300 text-xs font-bold uppercase tracking-widest">Budget Estimate</label>
         <input 
           type="range" 
-          min="10" 
-          max="500" 
-          step="10"
+          min="500" 
+          max="10000" 
+          step="500"
           value={prefs.budget}
           onChange={(e) => updatePrefs('budget', parseInt(e.target.value))}
           className="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-pink-500"
         />
         <div className="flex justify-between text-white font-bold text-sm">
           <span className="text-slate-500">Thrifty</span>
-          <span className="text-pink-400">${prefs.budget}</span>
+          <span className="text-pink-400">KES.{prefs.budget}</span>
           <span className="text-slate-500">Splurge</span>
         </div>
       </div>

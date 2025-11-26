@@ -17,7 +17,7 @@ export const GROUP_TYPES = [
 
 export const ACTIVITIES = [
   'Live Music', 'Food & Dining', 'Nightlife', 'Nature', 
-  'Art & Culture', 'Fitness', 'Shopping', 'Gaming'
+  'Art & Culture', 'Outdoors', 'Shopping', 'Gaming'
 ];
 
 export const PLACEHOLDER_COORDS = {
