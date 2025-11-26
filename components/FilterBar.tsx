@@ -1,0 +1,63 @@
+import React from 'react';
+import { DateRange, CategoryFilter } from '../types';
+
+interface FilterBarProps {
+  activeDate: DateRange;
+  activeCategory: CategoryFilter;
+  onDateChange: (date: DateRange) => void;
+  onCategoryChange: (category: CategoryFilter) => void;
+  disabled?: boolean;
+}
+
+const FilterBar: React.FC<FilterBarProps> = ({
+  activeDate,
+  activeCategory,
+  onDateChange,
+  onCategoryChange,
+  disabled = false
+}) => {
+  const dates: DateRange[] = ['Today', 'Tomorrow', 'This Weekend', 'Next Week'];
+  const categories: CategoryFilter[] = ['All', 'Party', 'Food', 'Live Music', 'Art', 'Nature', 'Fitness'];
+
+  return (
+    <div className="w-full space-y-3 animate-fade-in">
+      {/* Date Filters */}
+      <div className="flex overflow-x-auto pb-2 no-scrollbar gap-2.5 px-1">
+        {dates.map((date) => (
+          <button
+            key={date}
+            disabled={disabled}
+            onClick={() => onDateChange(date)}
+            className={`whitespace-nowrap px-4 py-2 rounded-full text-sm font-bold transition-all border backdrop-blur-md ${
+              activeDate === date
+                ? 'bg-white text-vibe-dark border-white shadow-lg scale-105'
+                : 'bg-black/30 border-white/10 text-slate-400 hover:bg-black/50 hover:text-white hover:border-white/20'
+            }`}
+          >
+            {date}
+          </button>
+        ))}
+      </div>
+
+      {/* Category Filters */}
+      <div className="flex overflow-x-auto pb-2 no-scrollbar gap-2 px-1">
+        {categories.map((cat) => (
+          <button
+            key={cat}
+            disabled={disabled}
+            onClick={() => onCategoryChange(cat)}
+            className={`whitespace-nowrap px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all backdrop-blur-md ${
+              activeCategory === cat
+                ? 'text-pink-300 bg-pink-500/20 border border-pink-500/50 shadow-lg shadow-pink-500/10'
+                : 'text-slate-500 border border-transparent hover:text-slate-300 hover:bg-white/5'
+            }`}
+          >
+            {cat}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default FilterBar;

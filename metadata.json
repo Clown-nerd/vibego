@@ -1,0 +1,7 @@
+{
+  "name": "VibeGo",
+  "description": "Your personal AI concierge for entertainment, events, and venues based on your mood and location.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}
