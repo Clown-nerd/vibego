@@ -53,10 +53,16 @@ const VenueCard: React.FC<VenueCardProps> = ({ venue, userLocation }) => {
       targetUrl = getGoogleSearchUrl(`site:kenyabuzz.com ${searchContext} tickets`);
     } else if (lowerLink.includes('ticketyetu.com')) {
       targetUrl = getGoogleSearchUrl(`site:ticketyetu.com ${searchContext} tickets`);
+    } else if (lowerLink.includes('gig.co.ke')) {
+      targetUrl = getGoogleSearchUrl(`site:gig.co.ke ${searchContext} tickets`);
+    } else if (lowerLink.includes('nairobieventsguide.com')) {
+      targetUrl = getGoogleSearchUrl(`site:nairobieventsguide.com ${searchContext} tickets`);
+    } else if (lowerLink.includes('eventpass.ke')) {
+      targetUrl = getGoogleSearchUrl(`site:eventpass.ke ${searchContext} tickets`);
     } else if (rawLink.startsWith('http') && !lowerLink.includes('none')) {
       targetUrl = rawLink;
     } else {
-      const query = `${searchContext} tickets (site:ticketsasa.com OR site:kenyabuzz.com OR site:ticketyetu.com)`;
+      const query = `${searchContext} tickets (site:ticketsasa.com OR site:kenyabuzz.com OR site:ticketyetu.com OR site:gig.co.ke OR site:nairobieventsguide.com OR site:eventpass.ke)`;
       targetUrl = getGoogleSearchUrl(query);
     }
     window.open(targetUrl, '_blank');
