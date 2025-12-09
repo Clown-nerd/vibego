@@ -2,12 +2,19 @@ import { GoogleGenAI } from "@google/genai";
 import { UserPreferences, Coordinates, Venue, DateRange, CategoryFilter } from '../types';
 
 const getAiClient = () => {
+  console.log('Environment check:', {
+    hasProcessEnv: typeof process !== 'undefined',
+    hasApiKey: !!process.env.API_KEY,
+    apiKeyLength: process.env.API_KEY?.length
+  });
+  
   const apiKey = process.env.API_KEY;
   if (!apiKey) {
     throw new Error("API Key not found");
   }
   return new GoogleGenAI({ apiKey });
 };
+
 
 export const getVibeRecommendations = async (
   prefs: UserPreferences,
