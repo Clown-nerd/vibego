@@ -34,7 +34,7 @@ export enum GroupType {
 }
 
 export type DateRange = 'Today' | 'Tomorrow' | 'This Weekend' | 'Next Week';
-export type CategoryFilter = 'All' | 'Party' | 'Food' | 'Live Music' | 'Art' | 'Nature' | 'Fitness';
+export type CategoryFilter = 'All' | 'Party' | 'Food' | 'Live Music' | 'Art' | 'Nature' | 'Sports';
 
 export interface UserPreferences {
   mood: Mood;
