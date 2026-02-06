@@ -17,7 +17,7 @@ const FilterBar: React.FC<FilterBarProps> = ({
   disabled = false
 }) => {
   const dates: DateRange[] = ['Today', 'Tomorrow', 'This Weekend', 'Next Week'];
-  const categories: CategoryFilter[] = ['All', 'Party', 'Food', 'Live Music', 'Art', 'Nature', 'Sports'];
+  const categories: CategoryFilter[] = ['All', 'Party', 'Food', 'Live Music', 'Art', 'Nature', 'Sports];
 
   return (
     <div className="w-full space-y-3 animate-fade-in">
