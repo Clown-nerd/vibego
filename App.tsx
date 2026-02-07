@@ -160,9 +160,20 @@ const App: React.FC = () => {
   ) => {
     setLoading(true);
     setError(null);
+    setVenues([]); // Clear existing venues
     try {
       const loc = location || PLACEHOLDER_COORDS;
-      const results = await getVibeRecommendations(prefs, loc, date, cat);
+      const results = await getVibeRecommendations(
+        prefs, 
+        loc, 
+        date, 
+        cat,
+        (partialVenues) => {
+          // Update UI progressively as venues arrive
+          setVenues(partialVenues);
+        }
+      );
+      // Final update with complete results
       setVenues(results);
     } catch (err) {
       console.error(err);
