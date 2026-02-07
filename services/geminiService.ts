@@ -20,7 +20,8 @@ export const getVibeRecommendations = async (
   prefs: UserPreferences,
   location: Coordinates,
   dateRange: DateRange = 'Today',
-  category: CategoryFilter = 'All'
+  category: CategoryFilter = 'All',
+  onVenueUpdate?: (venues: Venue[]) => void
 ): Promise<Venue[]> => {
   const ai = getAiClient();
 
@@ -89,7 +90,8 @@ IMPORTANT RULES:
 `;
 
   try {
-    const response = await ai.models.generateContent({
+    // Use streaming for progressive updates
+    const streamResponse = await ai.models.generateContentStream({
       model: "gemini-2.5-flash",
       contents: prompt,
       config: {
@@ -106,76 +108,131 @@ IMPORTANT RULES:
       },
     });
 
-    const text = response.text || "";
+    let textBuffer = "";
     
-    // Parse the text blocks we requested.
-    const venues: Venue[] = [];
+    // Process stream chunks
+    for await (const chunk of streamResponse) {
+      const chunkText = chunk.text || "";
+      textBuffer += chunkText;
+      
+      // Parse partial venues if callback is provided
+      if (onVenueUpdate) {
+        const partialVenues = parsePartialVenues(textBuffer);
+        if (partialVenues.length > 0) {
+          onVenueUpdate(partialVenues);
+        }
+      }
+    }
     
-    // Simple regex-based parsing based on the requested format
-    const venueBlocks = text.split('### ').slice(1); // Skip preamble
-
-    venueBlocks.forEach((block, index) => {
-      const lines = block.split('\n');
-      const name = lines[0].trim();
-      
-      let type = "Venue";
-      let budgetLevel = "$$";
-      let description = "A cool place to check out.";
-      let address = "";
-      let time = "";
-      let rating = "";
-      let ticketLink = "";
-      let coordinates: Coordinates | undefined;
-
-      lines.forEach(line => {
-        if (line.includes('**Type**:')) type = line.split('**Type**:')[1].trim();
-        if (line.includes('**Budget**:')) budgetLevel = line.split('**Budget**:')[1].trim();
-        if (line.includes('**Vibe**:')) description = line.split('**Vibe**:')[1].trim();
-        if (line.includes('**Address**:')) address = line.split('**Address**:')[1].trim();
-        if (line.includes('**Time**:')) time = line.split('**Time**:')[1].trim();
-        if (line.includes('**Rating**:')) rating = line.split('**Rating**:')[1].trim();
-        if (line.includes('**TicketLink**:')) {
-          const rawLink = line.split('**TicketLink**:')[1].trim();
-          if (rawLink && rawLink.toLowerCase() !== 'none') {
-            ticketLink = rawLink;
-          }
-        }
-        if (line.includes('**Coordinates**:')) {
-          const coordsStr = line.split('**Coordinates**:')[1].trim();
-          // Remove brackets if present and split
-          const parts = coordsStr.replace(/[\[\]]/g, '').split(',');
-          if (parts.length === 2) {
-            const lat = parseFloat(parts[0].trim());
-            const lng = parseFloat(parts[1].trim());
-            if (!isNaN(lat) && !isNaN(lng)) {
-              coordinates = { latitude: lat, longitude: lng };
-            }
-          }
-        }
-      });
-
-      // Construct a map URL
-      let mapUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(name + " " + address)}`;
-      
-      venues.push({
-        id: `venue-${index}`,
-        name,
-        type,
-        budgetLevel,
-        description,
-        address,
-        time,
-        rating,
-        ticketLink,
-        coordinates,
-        googleMapsUri: mapUrl
-      });
-    });
-
-    return venues;
+    // Final parse to get all venues
+    const finalVenues = parseCompleteVenues(textBuffer);
+    
+    // Call onVenueUpdate one last time with final result if callback provided
+    if (onVenueUpdate && finalVenues.length > 0) {
+      onVenueUpdate(finalVenues);
+    }
+    
+    return finalVenues;
 
   } catch (error) {
     console.error("Gemini API Error:", error);
     throw error;
   }
 };
+
+// Helper function to parse completed venue blocks from accumulated text
+function parsePartialVenues(text: string): Venue[] {
+  const venues: Venue[] = [];
+  
+  // Split by ### markers to find venue blocks
+  const blocks = text.split('### ');
+  
+  // Skip first block (preamble) and last block (might be incomplete)
+  for (let i = 1; i < blocks.length - 1; i++) {
+    const venue = parseVenueBlock(blocks[i], i - 1);
+    if (venue) {
+      venues.push(venue);
+    }
+  }
+  
+  return venues;
+}
+
+// Helper function to parse all complete venue blocks (including the last one)
+function parseCompleteVenues(text: string): Venue[] {
+  const venues: Venue[] = [];
+  
+  // Split by ### markers to find venue blocks
+  const blocks = text.split('### ').slice(1); // Skip preamble
+  
+  blocks.forEach((block, index) => {
+    const venue = parseVenueBlock(block, index);
+    if (venue) {
+      venues.push(venue);
+    }
+  });
+  
+  return venues;
+}
+
+// Parse a single venue block
+function parseVenueBlock(block: string, index: number): Venue | null {
+  const lines = block.split('\n');
+  const name = lines[0].trim();
+  
+  if (!name) return null;
+  
+  let type = "Venue";
+  let budgetLevel = "$$";
+  let description = "A cool place to check out.";
+  let address = "";
+  let time = "";
+  let rating = "";
+  let ticketLink = "";
+  let coordinates: Coordinates | undefined;
+
+  lines.forEach(line => {
+    if (line.includes('**Type**:')) type = line.split('**Type**:')[1].trim();
+    if (line.includes('**Budget**:')) budgetLevel = line.split('**Budget**:')[1].trim();
+    if (line.includes('**Vibe**:')) description = line.split('**Vibe**:')[1].trim();
+    if (line.includes('**Address**:')) address = line.split('**Address**:')[1].trim();
+    if (line.includes('**Time**:')) time = line.split('**Time**:')[1].trim();
+    if (line.includes('**Rating**:')) rating = line.split('**Rating**:')[1].trim();
+    if (line.includes('**Tickets**:')) {
+      const rawLink = line.split('**Tickets**:')[1].trim();
+      const lowerLink = rawLink.toLowerCase();
+      if (rawLink && lowerLink !== 'none' && lowerLink !== 'n/a') {
+        ticketLink = rawLink;
+      }
+    }
+    if (line.includes('**Coordinates**:')) {
+      const coordsStr = line.split('**Coordinates**:')[1].trim();
+      // Remove brackets if present and split
+      const parts = coordsStr.replace(/[\[\]]/g, '').split(',');
+      if (parts.length === 2) {
+        const lat = parseFloat(parts[0].trim());
+        const lng = parseFloat(parts[1].trim());
+        if (!isNaN(lat) && !isNaN(lng)) {
+          coordinates = { latitude: lat, longitude: lng };
+        }
+      }
+    }
+  });
+
+  // Construct a map URL
+  const mapUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(name + " " + address)}`;
+  
+  return {
+    id: `venue-${index}`,
+    name,
+    type,
+    budgetLevel,
+    description,
+    address,
+    time,
+    rating,
+    ticketLink,
+    coordinates,
+    googleMapsUri: mapUrl
+  };
+}
