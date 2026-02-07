@@ -12,7 +12,7 @@ export default defineConfig(({ mode }) => {
         hmr: {
               protocol: 'wss',
               clientPort: 433,
-       }'
+       }
       },
       plugins: [react()],
       define: {

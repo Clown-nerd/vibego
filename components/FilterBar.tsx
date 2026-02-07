@@ -48,7 +48,7 @@ const FilterBar: React.FC<FilterBarProps> = ({
             onClick={() => onCategoryChange(cat)}
             className={`whitespace-nowrap px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all backdrop-blur-md ${
               activeCategory === cat
-                ? 'text-pink-300 bg-pink-500/20 border border-pink-500/50 shadow-lg shadow-pink-500/10'
+                ? 'text-teal-300 bg-teal-500/20 border border-teal-500/50 shadow-lg shadow-teal-500/10'
                 : 'text-slate-500 border border-transparent hover:text-slate-300 hover:bg-white/5'
             }`}
           >

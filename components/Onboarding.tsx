@@ -46,12 +46,12 @@ const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
             onClick={() => updatePrefs('groupType', type.value)}
             className={`p-6 rounded-3xl border transition-all duration-300 relative overflow-hidden group ${
               prefs.groupType === type.value
-                ? 'border-transparent text-white shadow-lg shadow-purple-500/30 transform scale-[1.02]'
+                ? 'border-transparent text-white shadow-lg shadow-orange-500/30 transform scale-[1.02]'
                 : 'border-white/10 bg-black/20 text-slate-400 hover:bg-black/40 hover:border-white/20'
             }`}
           >
             {prefs.groupType === type.value && (
-               <div className="absolute inset-0 bg-gradient-to-br from-violet-600 to-pink-500 opacity-100 z-0" />
+               <div className="absolute inset-0 bg-gradient-to-br from-orange-500 to-orange-600 opacity-100 z-0" />
             )}
             <div className="relative z-10 text-xl font-bold tracking-wide">{type.label}</div>
           </button>
@@ -72,12 +72,12 @@ const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
             onClick={() => updatePrefs('mood', m.value)}
             className={`flex items-center p-5 rounded-2xl border transition-all duration-300 relative overflow-hidden ${
               prefs.mood === m.value
-                ? 'border-transparent text-white shadow-lg shadow-pink-500/30 translate-x-1'
+                ? 'border-transparent text-white shadow-lg shadow-orange-500/30 translate-x-1'
                 : 'border-white/10 bg-black/20 text-slate-400 hover:bg-black/40'
             }`}
           >
              {prefs.mood === m.value && (
-               <div className="absolute inset-0 bg-gradient-to-r from-pink-500 via-purple-600 to-violet-600 opacity-90 z-0" />
+               <div className="absolute inset-0 bg-gradient-to-r from-orange-500 via-orange-600 to-orange-700 opacity-90 z-0" />
             )}
             <span className="text-3xl mr-5 relative z-10">
               <ion-icon name={m.icon}></ion-icon>
@@ -104,11 +104,11 @@ const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
           step="500"
           value={prefs.budget}
           onChange={(e) => updatePrefs('budget', parseInt(e.target.value))}
-          className="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-pink-500"
+          className="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-orange-500"
         />
         <div className="flex justify-between text-white font-bold text-sm">
           <span className="text-slate-500">Thrifty</span>
-          <span className="text-pink-400">KES.{prefs.budget}</span>
+          <span className="text-orange-400">KES.{prefs.budget}</span>
           <span className="text-slate-500">Splurge</span>
         </div>
       </div>
@@ -149,7 +149,7 @@ const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
         {step < 3 ? (
           <Button fullWidth onClick={nextStep} className="rounded-2xl">Next</Button>
         ) : (
-          <Button fullWidth onClick={() => onComplete(prefs)} className="rounded-2xl shadow-xl shadow-purple-500/20">Find My Vibe</Button>
+          <Button fullWidth onClick={() => onComplete(prefs)} className="rounded-2xl shadow-xl shadow-orange-500/20">Find My Vibe</Button>
         )}
       </div>
     </div>

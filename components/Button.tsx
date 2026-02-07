@@ -17,7 +17,7 @@ const Button: React.FC<ButtonProps> = ({
   const baseStyles = "px-6 py-3 font-bold transition-all duration-300 flex items-center justify-center gap-2 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed tracking-wide";
   
   const variants = {
-    primary: "bg-gradient-to-r from-violet-600 to-pink-500 text-white hover:shadow-lg hover:shadow-pink-500/25 border border-transparent bg-[length:200%_200%] hover:bg-[100%_0] transition-all",
+    primary: "bg-gradient-to-r from-orange-500 to-orange-600 text-white hover:shadow-lg hover:shadow-orange-500/25 border border-transparent hover:from-orange-600 hover:to-orange-700 transition-all",
     secondary: "bg-white/10 text-white hover:bg-white/20 border border-white/5 backdrop-blur-md",
     outline: "border-2 border-white/20 text-white hover:bg-white/10 hover:border-white/40",
     ghost: "text-slate-400 hover:text-white hover:bg-white/5"
