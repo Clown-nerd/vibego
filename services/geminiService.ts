@@ -109,7 +109,6 @@ IMPORTANT RULES:
     });
 
     let textBuffer = "";
-    const allVenues: Venue[] = [];
     
     // Process stream chunks
     for await (const chunk of streamResponse) {
@@ -201,7 +200,8 @@ function parseVenueBlock(block: string, index: number): Venue | null {
     if (line.includes('**Rating**:')) rating = line.split('**Rating**:')[1].trim();
     if (line.includes('**Tickets**:')) {
       const rawLink = line.split('**Tickets**:')[1].trim();
-      if (rawLink && rawLink.toLowerCase() !== 'none' && rawLink.toLowerCase() !== 'n/a') {
+      const lowerLink = rawLink.toLowerCase();
+      if (rawLink && lowerLink !== 'none' && lowerLink !== 'n/a') {
         ticketLink = rawLink;
       }
     }
