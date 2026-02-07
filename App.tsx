@@ -89,11 +89,60 @@ const App: React.FC = () => {
   
   // PWA Install State
   const [installPrompt, setInstallPrompt] = useState<any>(null);
-
   useEffect(() => {
-    // Att
-    
+    // ── Location Permission Request ──
+    const requestLocation = async () => {
+      try {
+        // 1. Check current permission state (if Permissions API is available)
+        if (navigator.permissions) {
+          const status = await navigator.permissions.query({ name: 'geolocation' });
 
+          if (status.state === 'denied') {
+            // User previously blocked location — skip the prompt, go to Nairobi default
+            console.warn("Location permission previously denied, defaulting to Nairobi");
+            setLocation(PLACEHOLDER_COORDS);
+            return;
+          }
+
+          // 2. Listen for future permission changes (e.g., user enables it in settings)
+          status.addEventListener('change', async () => {
+            if (status.state === 'granted') {
+              try {
+                const loc = await getCurrentLocation();
+                setLocation(loc);
+              } catch {
+                // keep current location
+              }
+            }
+          });
+        }
+
+        // 3. This triggers the browser's native permission prompt if state is 'prompt'
+        //    or returns immediately if state is already 'granted'
+        const loc = await getCurrentLocation();
+        setLocation(loc);
+      } catch (err) {
+        console.warn("Location unavailable, defaulting to Nairobi", err);
+        setLocation(PLACEHOLDER_COORDS);
+      }
+    };
+
+    requestLocation();
+
+    // ── PWA Install Event Listener ──
+    const handleBeforeInstallPrompt = (e: any) => {
+      e.preventDefault();
+      setInstallPrompt(e);
+    };
+
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    };
+  }, []);
+  
+    
     // PWA Install Event Listener
     const handleBeforeInstallPrompt = (e: any) => {
       e.preventDefault();
