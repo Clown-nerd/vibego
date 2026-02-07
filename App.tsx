@@ -69,7 +69,7 @@ const DynamicBackground: React.FC<{ mood?: string; category?: string }> = ({ moo
       <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-vibe-dark/80 to-vibe-dark" />
       
       {/* Atmospheric Glows */}
-      <div className="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-purple-900/20 to-transparent mix-blend-overlay" />
+      <div className="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-orange-900/20 to-transparent mix-blend-overlay" />
     </div>
   );
 };
@@ -198,7 +198,7 @@ const App: React.FC = () => {
   ];
 
   return (
-    <div className="min-h-screen text-slate-100 font-sans selection:bg-pink-500 selection:text-white">
+    <div className="min-h-screen text-slate-100 font-sans selection:bg-orange-500 selection:text-white">
       <DynamicBackground mood={userPrefs?.mood} category={categoryFilter} />
       
       {!onboarded ? (
@@ -226,8 +226,8 @@ const App: React.FC = () => {
                {/* Hero Section */}
                <div className="text-center mb-10 animate-fade-in-down">
                   <div className="inline-flex items-center justify-center gap-2 mb-4">
-                    <ion-icon name="sparkles" className="text-3xl text-purple-400 animate-pulse-slow"></ion-icon>
-                    <h1 className="text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-violet-200 via-pink-200 to-amber-200 tracking-tighter">
+                    <ion-icon name="sparkles" className="text-3xl text-orange-400 animate-pulse-slow"></ion-icon>
+                    <h1 className="text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-orange-200 via-amber-200 to-teal-200 tracking-tighter">
                       VibeGo
                     </h1>
                   </div>
@@ -240,7 +240,7 @@ const App: React.FC = () => {
                <div className="flex flex-col gap-4 max-w-sm mx-auto w-full mb-16 animate-fade-in">
                  <Button 
                    onClick={() => setShowWizard(true)} 
-                   className="rounded-2xl h-14 text-lg shadow-xl shadow-purple-500/20"
+                   className="rounded-2xl h-14 text-lg shadow-xl shadow-orange-500/20"
                  >
                    <ion-icon name="sparkles-outline" className="mr-2"></ion-icon>
                    Find My Vibe
@@ -312,7 +312,7 @@ const App: React.FC = () => {
             <div className="mb-6 flex items-end justify-between px-2">
               <div>
                 <h2 className="text-3xl font-bold text-white tracking-tight">Top Picks</h2>
-                <p className="text-sm text-pink-200/80 font-medium mt-1 flex items-center gap-1">
+                <p className="text-sm text-orange-200/80 font-medium mt-1 flex items-center gap-1">
                    <ion-icon name="location-outline"></ion-icon> {location ? 'Near You' : 'Default Loc'} • {userPrefs?.mood} Vibe
                 </p>
               </div>
@@ -341,7 +341,7 @@ const App: React.FC = () => {
             ) : venues.length === 0 ? (
               <div className="text-center py-24 opacity-60">
                 <div className="bg-white/5 w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <ion-icon name="telescope-outline" className="text-4xl text-purple-300"></ion-icon>
+                  <ion-icon name="telescope-outline" className="text-4xl text-orange-300"></ion-icon>
                 </div>
                 <h3 className="text-xl font-bold text-white mb-2">No vibes found</h3>
                 <p className="text-slate-300">Adjust your filters to find more events.</p>
