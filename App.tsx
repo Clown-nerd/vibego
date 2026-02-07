@@ -141,20 +141,6 @@ const App: React.FC = () => {
       window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
     };
   }, []);
-  
-    
-    // PWA Install Event Listener
-    const handleBeforeInstallPrompt = (e: any) => {
-      e.preventDefault();
-      setInstallPrompt(e);
-    };
-
-    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
-
-    return () => {
-      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
-    };
-  }, []);
 
   const handleInstallClick = () => {
     if (!installPrompt) return;
@@ -357,7 +343,7 @@ const App: React.FC = () => {
               <div>
                 <h2 className="text-3xl font-bold text-white tracking-tight">Top Picks</h2>
                 <p className="text-sm text-orange-200/80 font-medium mt-1 flex items-center gap-1">
-                   <ion-icon name="location-outline"></ion-icon> {location ? 'Near You' : 'Default Loc'} • {userPrefs?.mood} Vibe
+                   <ion-icon name="location-outline"></ion-icon> {location && (location.latitude !== PLACEHOLDER_COORDS.latitude || location.longitude !== PLACEHOLDER_COORDS.longitude) ? 'Near You' : 'Nairobi (Default)'} • {userPrefs?.mood} Vibe
                 </p>
               </div>
               <Button 
