@@ -21,6 +21,6 @@ export const ACTIVITIES = [
 ];
 
 export const PLACEHOLDER_COORDS = {
-  latitude: 40.7128,
-  longitude: -74.0060 // NYC default if geo fails
+  latitude: -1.2921,
+  longitude: 36.8219 // Nairobi default if geo fails
 };

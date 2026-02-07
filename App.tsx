@@ -91,13 +91,8 @@ const App: React.FC = () => {
   const [installPrompt, setInstallPrompt] = useState<any>(null);
 
   useEffect(() => {
-    // Attempt to get location on mount silently
-    getCurrentLocation()
-      .then(loc => setLocation(loc))
-      .catch(err => {
-        console.warn("Location denied or error, using placeholder", err);
-        setLocation(PLACEHOLDER_COORDS);
-      });
+    // Att
+    
 
     // PWA Install Event Listener
     const handleBeforeInstallPrompt = (e: any) => {
