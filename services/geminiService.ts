@@ -110,7 +110,7 @@ IMPORTANT RULES:
     });
 
     let textBuffer = "";
-    let lastVenueCount = 0;
+    let lastUpdateLength = 0;
     
     // Process stream chunks
     for await (const chunk of streamResponse) {
@@ -118,12 +118,12 @@ IMPORTANT RULES:
       textBuffer += chunkText;
       
       // Parse partial venues if callback is provided
-      if (onVenueUpdate) {
+      // Update UI whenever we have significant new content to show
+      if (onVenueUpdate && textBuffer.length > lastUpdateLength + 50) {
         const partialVenues = parsePartialVenues(textBuffer);
-        // Only update if we have new venues or updated content
-        if (partialVenues.length > lastVenueCount) {
-          lastVenueCount = partialVenues.length;
+        if (partialVenues.length > 0) {
           onVenueUpdate(partialVenues);
+          lastUpdateLength = textBuffer.length;
         }
       }
     }

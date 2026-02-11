@@ -26,5 +26,5 @@ export const PLACEHOLDER_COORDS = {
 };
 
 // Venue parsing constants
-export const MIN_VENUE_NAME_LENGTH = 2;
+export const MIN_VENUE_NAME_LENGTH = 3;
 export const VENUE_LOADING_TEXT = "Loading details...";
