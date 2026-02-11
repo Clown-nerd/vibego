@@ -11,6 +11,9 @@ const VenueCard: React.FC<VenueCardProps> = ({ venue, userLocation }) => {
   const [showRideModal, setShowRideModal] = useState(false);
   const [showMap, setShowMap] = useState(false);
   const [shareLabel, setShareLabel] = useState('Share');
+  
+  // Detect if venue is still loading (streaming in progress)
+  const isLoading = venue.description === "Loading details...";
 
   const handleBookRide = () => {
     setShowRideModal(true);
@@ -114,7 +117,7 @@ const VenueCard: React.FC<VenueCardProps> = ({ venue, userLocation }) => {
   };
 
   return (
-    <div className="group relative overflow-hidden rounded-3xl bg-black/40 border border-white/10 backdrop-blur-xl transition-all duration-300 hover:bg-black/50 hover:border-white/20 shadow-xl shadow-black/20">
+    <div className={`group relative overflow-hidden rounded-3xl bg-black/40 border border-white/10 backdrop-blur-xl transition-all duration-300 hover:bg-black/50 hover:border-white/20 shadow-xl shadow-black/20 ${isLoading ? 'animate-pulse' : ''}`}>
       
       {/* Glow Effect on Hover */}
       <div className="absolute inset-0 bg-gradient-to-br from-violet-500/10 via-transparent to-pink-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
@@ -174,8 +177,9 @@ const VenueCard: React.FC<VenueCardProps> = ({ venue, userLocation }) => {
              </button>
            </div>
         ) : (
-          <p className="text-slate-300 text-sm leading-relaxed mb-5 line-clamp-3 font-medium opacity-90">
+          <p className={`text-slate-300 text-sm leading-relaxed mb-5 line-clamp-3 font-medium ${isLoading ? 'opacity-60 italic' : 'opacity-90'}`}>
             {venue.description}
+            {isLoading && <span className="inline-block ml-2 text-orange-400">●</span>}
           </p>
         )}
 

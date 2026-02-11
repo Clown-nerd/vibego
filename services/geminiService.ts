@@ -109,6 +109,7 @@ IMPORTANT RULES:
     });
 
     let textBuffer = "";
+    let lastVenueCount = 0;
     
     // Process stream chunks
     for await (const chunk of streamResponse) {
@@ -118,7 +119,9 @@ IMPORTANT RULES:
       // Parse partial venues if callback is provided
       if (onVenueUpdate) {
         const partialVenues = parsePartialVenues(textBuffer);
-        if (partialVenues.length > 0) {
+        // Only update if we have new venues or updated content
+        if (partialVenues.length > lastVenueCount) {
+          lastVenueCount = partialVenues.length;
           onVenueUpdate(partialVenues);
         }
       }
@@ -147,8 +150,9 @@ function parsePartialVenues(text: string): Venue[] {
   // Split by ### markers to find venue blocks
   const blocks = text.split('### ');
   
-  // Skip first block (preamble) and last block (might be incomplete)
-  for (let i = 1; i < blocks.length - 1; i++) {
+  // Process all blocks except the first (preamble)
+  // Include the last block for progressive streaming - show as soon as we have minimal data
+  for (let i = 1; i < blocks.length; i++) {
     const venue = parseVenueBlock(blocks[i], i - 1);
     if (venue) {
       venues.push(venue);
@@ -180,11 +184,13 @@ function parseVenueBlock(block: string, index: number): Venue | null {
   const lines = block.split('\n');
   const name = lines[0].trim();
   
-  if (!name) return null;
+  // Require at least a name to show the venue
+  if (!name || name.length < 2) return null;
   
+  // Default values that will be shown while streaming
   let type = "Venue";
   let budgetLevel = "$$";
-  let description = "A cool place to check out.";
+  let description = "Loading details...";
   let address = "";
   let time = "";
   let rating = "";
@@ -192,28 +198,50 @@ function parseVenueBlock(block: string, index: number): Venue | null {
   let coordinates: Coordinates | undefined;
 
   lines.forEach(line => {
-    if (line.includes('**Type**:')) type = line.split('**Type**:')[1].trim();
-    if (line.includes('**Budget**:')) budgetLevel = line.split('**Budget**:')[1].trim();
-    if (line.includes('**Vibe**:')) description = line.split('**Vibe**:')[1].trim();
-    if (line.includes('**Address**:')) address = line.split('**Address**:')[1].trim();
-    if (line.includes('**Time**:')) time = line.split('**Time**:')[1].trim();
-    if (line.includes('**Rating**:')) rating = line.split('**Rating**:')[1].trim();
+    if (line.includes('**Type**:')) {
+      const parsed = line.split('**Type**:')[1]?.trim();
+      if (parsed) type = parsed;
+    }
+    if (line.includes('**Budget**:')) {
+      const parsed = line.split('**Budget**:')[1]?.trim();
+      if (parsed) budgetLevel = parsed;
+    }
+    if (line.includes('**Vibe**:')) {
+      const parsed = line.split('**Vibe**:')[1]?.trim();
+      if (parsed) description = parsed;
+    }
+    if (line.includes('**Address**:')) {
+      const parsed = line.split('**Address**:')[1]?.trim();
+      if (parsed) address = parsed;
+    }
+    if (line.includes('**Time**:')) {
+      const parsed = line.split('**Time**:')[1]?.trim();
+      if (parsed) time = parsed;
+    }
+    if (line.includes('**Rating**:')) {
+      const parsed = line.split('**Rating**:')[1]?.trim();
+      if (parsed) rating = parsed;
+    }
     if (line.includes('**Tickets**:')) {
-      const rawLink = line.split('**Tickets**:')[1].trim();
-      const lowerLink = rawLink.toLowerCase();
-      if (rawLink && lowerLink !== 'none' && lowerLink !== 'n/a') {
-        ticketLink = rawLink;
+      const rawLink = line.split('**Tickets**:')[1]?.trim();
+      if (rawLink) {
+        const lowerLink = rawLink.toLowerCase();
+        if (rawLink && lowerLink !== 'none' && lowerLink !== 'n/a') {
+          ticketLink = rawLink;
+        }
       }
     }
     if (line.includes('**Coordinates**:')) {
-      const coordsStr = line.split('**Coordinates**:')[1].trim();
-      // Remove brackets if present and split
-      const parts = coordsStr.replace(/[\[\]]/g, '').split(',');
-      if (parts.length === 2) {
-        const lat = parseFloat(parts[0].trim());
-        const lng = parseFloat(parts[1].trim());
-        if (!isNaN(lat) && !isNaN(lng)) {
-          coordinates = { latitude: lat, longitude: lng };
+      const coordsStr = line.split('**Coordinates**:')[1]?.trim();
+      if (coordsStr) {
+        // Remove brackets if present and split
+        const parts = coordsStr.replace(/[\[\]]/g, '').split(',');
+        if (parts.length === 2) {
+          const lat = parseFloat(parts[0].trim());
+          const lng = parseFloat(parts[1].trim());
+          if (!isNaN(lat) && !isNaN(lng)) {
+            coordinates = { latitude: lat, longitude: lng };
+          }
         }
       }
     }
