@@ -24,3 +24,7 @@ export const PLACEHOLDER_COORDS = {
   latitude: -1.2921,
   longitude: 36.8219 // Nairobi default if geo fails
 };
+
+// Venue parsing constants
+export const MIN_VENUE_NAME_LENGTH = 3;
+export const VENUE_LOADING_TEXT = "Loading details...";
