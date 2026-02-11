@@ -1,5 +1,6 @@
 import { GoogleGenAI } from "@google/genai";
 import { UserPreferences, Coordinates, Venue, DateRange, CategoryFilter } from '../types';
+import { MIN_VENUE_NAME_LENGTH, VENUE_LOADING_TEXT } from '../constants';
 
 const getAiClient = () => {
   console.log('Environment check:', {
@@ -185,12 +186,12 @@ function parseVenueBlock(block: string, index: number): Venue | null {
   const name = lines[0].trim();
   
   // Require at least a name to show the venue
-  if (!name || name.length < 2) return null;
+  if (!name || name.length < MIN_VENUE_NAME_LENGTH) return null;
   
   // Default values that will be shown while streaming
   let type = "Venue";
   let budgetLevel = "$$";
-  let description = "Loading details...";
+  let description = VENUE_LOADING_TEXT;
   let address = "";
   let time = "";
   let rating = "";

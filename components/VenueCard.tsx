@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Venue, Coordinates } from '../types';
 import Button from './Button';
+import { VENUE_LOADING_TEXT } from '../constants';
 
 interface VenueCardProps {
   venue: Venue;
@@ -13,7 +14,7 @@ const VenueCard: React.FC<VenueCardProps> = ({ venue, userLocation }) => {
   const [shareLabel, setShareLabel] = useState('Share');
   
   // Detect if venue is still loading (streaming in progress)
-  const isLoading = venue.description === "Loading details...";
+  const isLoading = venue.description === VENUE_LOADING_TEXT;
 
   const handleBookRide = () => {
     setShowRideModal(true);
