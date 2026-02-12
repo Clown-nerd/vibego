@@ -12,7 +12,7 @@ const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
   const [prefs, setPrefs] = useState<UserPreferences>({
     mood: Mood.ENERGETIC,
     groupType: GroupType.FRIENDS,
-    budget: 50,
+    budget:300,
     activities: []
   });
 
@@ -99,9 +99,9 @@ const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
         <label className="text-slate-300 text-xs font-bold uppercase tracking-widest">Budget Estimate</label>
         <input 
           type="range" 
-          min="1000" 
-          max="200000" 
-          step="5000"
+          min="500" 
+          max="50000" 
+          step="1000"
           value={prefs.budget}
           onChange={(e) => updatePrefs('budget', parseInt(e.target.value))}
           className="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-orange-500"
