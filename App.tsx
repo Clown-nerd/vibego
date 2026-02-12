@@ -165,7 +165,7 @@ const App: React.FC = () => {
     const genericPrefs: UserPreferences = {
       mood: Mood.SOCIAL,
       groupType: GroupType.FRIENDS,
-      budget: 50,
+      budget: 300,
       activities: ['Food', 'Nightlife']
     };
     handleOnboardingComplete(genericPrefs);
